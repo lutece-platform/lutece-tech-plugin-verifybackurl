@@ -1,0 +1,12 @@
+<#include "manageverifybackurl_tabs.html" />
+<@tabs tab="authorizedurl" />
+
+<@rowBoxHeader i18nTitleKey="verifybackurl.create_authorizedurl.title">
+    <form class="form-horizontal" method="post" name="create_authorizedurl" action="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp">
+        <@messages errors=errors />
+        <input type="hidden" id="id" name="id"/>
+        <@fieldInputText i18nLabelKey="verifybackurl.create_authorizedurl.labelName" inputName="name" mandatory=true value="${authorizedurl.name!''}" i18nHelpBlockKey="verifybackurl.create_authorizedurl.labelName.help" />
+        <@fieldInputText i18nLabelKey="verifybackurl.create_authorizedurl.labelUrl" inputName="url" mandatory=true value="${authorizedurl.url!''}" i18nHelpBlockKey="verifybackurl.create_authorizedurl.labelUrl.help" />
+        <@actionButtons button1Name="action_createAuthorizedUrl" button2Name="view_manageAuthorizedUrl"/>
+    </form>
+</@rowBoxHeader>

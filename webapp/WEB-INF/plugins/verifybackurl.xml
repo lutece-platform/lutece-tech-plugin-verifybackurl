@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plug-in>
+    <name>verifybackurl</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>1.0.0</version>
+    <documentation></documentation>
+    <installation></installation>
+    <changes></changes>
+    <user-guide></user-guide>
+    <description>verifybackurl.plugin.description</description>
+    <provider>verifybackurl.plugin.provider</provider>
+    <provider-url>http://your.web.site.com</provider-url>
+    <icon-url>images/admin/skin/feature_default_icon.png</icon-url>
+    <copyright>Copyright (c) 2016 Your Company</copyright>
+    <db-pool-required>1</db-pool-required>
+    
+    <core-version-dependency>
+        <min-core-version>4.1.0</min-core-version>
+        <max-core-version/>	
+    </core-version-dependency>
+
+    <!-- Admin features parameters -->
+    <admin-features>
+        <admin-feature>
+            <feature-id>VERIFYBACKURL_MANAGEMENT</feature-id>
+            <feature-title>verifybackurl.adminFeature.ManageVerifybackurl.name</feature-title>
+            <feature-description>verifybackurl.adminFeature.ManageVerifybackurl.description</feature-description>
+            <feature-level>1</feature-level>
+            <feature-url>jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp</feature-url>
+            <feature-icon-url></feature-icon-url>
+      </admin-feature>
+    </admin-features>    
+
+    <!-- XPages parameters -->
+    <applications>
+    </applications>
+
+    <!-- Portlet parameters -->
+    <portlets>
+   </portlets>
+   
+   <!-- Filter for Back Url -->
+    <filters>
+        <filter>
+            <filter-name>backUrlFilter</filter-name>
+            <filter-class>fr.paris.lutece.plugins.verifybackurl.service.filter.BackUrlFilter</filter-class>
+            <url-pattern>/jsp/*</url-pattern>
+            <filter-order>-4000</filter-order>
+        </filter>
+    </filters>
+    
+</plug-in>

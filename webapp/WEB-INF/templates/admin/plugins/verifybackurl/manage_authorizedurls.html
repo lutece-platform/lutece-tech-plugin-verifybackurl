@@ -1,0 +1,49 @@
+<#include "manageverifybackurl_tabs.html" />
+
+<@tabs tab="authorizedurl" />
+<@rowBox>
+    <div class="box-header">
+            <h3 class="box-title">#i18n{verifybackurl.manage_authorizedurl.title}</h3>
+            <form class="form-inline pull-right" method="post" name="manage_authorizedurl" action="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp">
+                <button  class="btn btn-primary" name="view_createAuthorizedUrl" type="submit">
+                    <i class="icon-plus icon-white"></i>&nbsp;#i18n{verifybackurl.manage_authorizedurls.buttonAdd}
+                </button>
+            </form>
+    </div>
+    <@boxBody>    
+        <@messages infos=infos />
+        <@paginationAdmin paginator=paginator combo=1 />
+            <@table>
+                <tr>
+                    <input type="hidden" id="id" name="id"/>
+                    <th>#i18n{verifybackurl.manage_authorizedurls.columnName}</th>
+                    <th>#i18n{verifybackurl.manage_authorizedurls.columnUrl}</th>
+                    <th>#i18n{portal.util.labelActions}</th>
+                </tr>
+                <@tableHeadBodySeparator />
+                <#list authorizedurl_list as authorizedurl >
+                    <tr>
+                        <input type="hidden" id="id" name="id"/>
+                        <td>
+                            ${authorizedurl.name}
+                        </td>
+                        <td>
+                            ${authorizedurl.url}
+                        </td>
+                        <td>
+                            <a href="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?view=modifyAuthorizedUrl&id=${authorizedurl.id}"
+                               class="btn btn-primary btn-sm" title="#i18n{portal.util.labelModify}">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+
+                            <a href="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?action=confirmRemoveAuthorizedUrl&id=${authorizedurl.id}"
+                               class="btn btn-danger btn-sm" title="#i18n{portal.util.labelDelete}" >
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </#list>
+            </@table>
+        <@paginationAdmin paginator=paginator />
+  </@boxBody>
+</@rowBox>
