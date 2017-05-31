@@ -3,7 +3,7 @@
     <parent>
         <artifactId>lutece-global-pom</artifactId>
         <groupId>fr.paris.lutece.tools</groupId>
-        <version>3.0.3</version>
+        <version>3.0.11</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -13,16 +13,27 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Lutece verifybackurl plugin</name>
 
-    <repositories>
-        <repository>
-            <id>lutece</id>
-            <name>luteceRepository</name>
-            <url>http://dev.lutece.paris.fr/maven_repository</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
+	<repositories>
+			<repository>
+					<id>lutece</id>
+					<name>luteceRepository</name>
+					<url>http://dev.lutece.paris.fr/maven_repository</url>
+					<layout>default</layout>
+			</repository>
+			<repository>
+					<id>luteceSnapshot</id>
+					<name>luteceSnapshot</name>
+					<url>http://dev.lutece.paris.fr/snapshot_repository</url>
+					<snapshots>
+							<enabled>true</enabled>
+					</snapshots>
+					<releases>
+							<enabled>false</enabled>
+					</releases>
+			</repository>
+	</repositories>
 
-    <dependencies>
+	<dependencies>
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
