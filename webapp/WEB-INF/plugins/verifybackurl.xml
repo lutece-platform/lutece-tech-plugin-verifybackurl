@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plug-in>
+<?xml version="1.0" encoding="UTF-8"?><plug-in>
     <name>verifybackurl</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
     <version>1.0.0</version>
-    <documentation></documentation>
-    <installation></installation>
-    <changes></changes>
-    <user-guide></user-guide>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
     <description>verifybackurl.plugin.description</description>
     <provider>verifybackurl.plugin.provider</provider>
     <provider-url>http://your.web.site.com</provider-url>
@@ -27,7 +26,7 @@
             <feature-description>verifybackurl.adminFeature.ManageVerifybackurl.description</feature-description>
             <feature-level>1</feature-level>
             <feature-url>jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp</feature-url>
-            <feature-icon-url></feature-icon-url>
+            <feature-icon-url/>
       </admin-feature>
     </admin-features>    
 
