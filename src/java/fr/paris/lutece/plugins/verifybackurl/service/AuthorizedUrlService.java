@@ -35,10 +35,13 @@ package fr.paris.lutece.plugins.verifybackurl.service;
 
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
+import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizedUrlService
 {
@@ -90,4 +93,58 @@ public class AuthorizedUrlService
         } 
         return null;
     }
+    
+    /** 
+     * return the service back url if the url is authorized
+     * @param request the request
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrl(HttpServletRequest request)
+    {   	
+    	return getServiceBackUrl(request, VerifyBackUrlConstants.PARAMETER_BACK_URL);
+    }
+    
+    
+    /** 
+     * return the service back url if the url is authorized
+     * @param request the request
+     * @param strBackUrlParameter the parameter name of the service back url
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrl(HttpServletRequest request,String strBackUrlParameter)
+    {   	
+    	return getServiceBackUrl(request, VerifyBackUrlConstants.PARAMETER_BACK_URL,VerifyBackUrlConstants.SESSION_ATTRIBUTE_BACK_URL);
+    }
+    
+    
+    /** 
+     * return the service back url if the url is authorized
+     * @param request the request
+     * @param strBackUrlParameter  the parameter name of the service back url
+     * @param strBackUrlSessionName The session attribute name who is stored the back url
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrl(HttpServletRequest request,String strBackUrlParameter,String strBackUrlSessionName)
+    {   	
+    	 String strUrl= request.getParameter(strBackUrlParameter);
+    	 boolean checkConstraints = false;
+         if ( strUrl!= null)
+         {
+             checkConstraints = ProcessConstraintsService.checkConstraints( strUrl );
+         }
+         if ( strBackUrlParameter!= null && checkConstraints )
+         {
+             VerifiyBackUrlUtils.storeBackUrlInSession( request, strUrl,strBackUrlSessionName );
+         }
+         else if ( strBackUrlParameter!= null && !checkConstraints )
+         {
+             //this is for the security : if a service provide a back url,
+             //but this url breaks constaints, then drop the service in session
+             VerifiyBackUrlUtils.dropBackUrlInSession( request,strBackUrlSessionName );
+         }
+    	
+    	return VerifiyBackUrlUtils.getBackUrlInSession(request,strBackUrlSessionName);
+    }
+    
+    
 }

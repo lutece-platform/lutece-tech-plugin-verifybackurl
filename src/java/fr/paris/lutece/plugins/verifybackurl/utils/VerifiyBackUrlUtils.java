@@ -38,7 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
@@ -135,23 +135,40 @@ public class VerifiyBackUrlUtils
      * Store service in session
      * @param request the HttpServletRequest
      * @param strBackUrl the backUrl to store in session
+     * @param strSessionAttributeName the strSessionAttributeName who must store the backurl
+     * 
      */
-    public static void storeBackUrlInSession ( HttpServletRequest request, String strBackUrl )
+    public static void storeBackUrlInSession ( HttpServletRequest request, String strBackUrl,String strSessionAttributeName )
     {
         HttpSession session = request.getSession( true ); 
-        session.setAttribute( VerifyBackUrlConstants.SESSION_ATTRIBUTE_BACK_URL, strBackUrl );
+        session.setAttribute( strSessionAttributeName , strBackUrl );
     }
     
     /**
      * Drop Service in session
      * @param request the HttpServletrequest 
+     * @param strSessionAttributeName the strSessionAttributeName who must store the backurl
      */
     
-    public static void dropBackUrlInSession ( HttpServletRequest request )
+    public static void dropBackUrlInSession ( HttpServletRequest request,String strSessionAttributeName )
     {
         HttpSession session = request.getSession( true );
-        session.removeAttribute( VerifyBackUrlConstants.SESSION_ATTRIBUTE_BACK_URL );
+        session.removeAttribute( strSessionAttributeName );
         
     }
+    
+    
+    /**
+     * Return the back url in session
+     * @param strSessionAttributeName the strSessionAttributeName who must store the backurl
+     * @param request the HttpServletRequest
+     */
+    public static String getBackUrlInSession ( HttpServletRequest request,String strSessionAttributeName)
+    {
+        HttpSession session = request.getSession( true ); 
+        return (String) session.getAttribute( strSessionAttributeName);
+    }
+    
+    
     
 }

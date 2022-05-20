@@ -48,7 +48,7 @@ public class VerifyBackUrlConstants
     public static final String PROPERTY_REGEXP_BASE_URL = "verifybackurl.backUrl.regex.baseUrl";
     
     //Parameters in requests
-    public static final String PARAMETER_BACK_URL = "service_back_url";
+    public static final String PARAMETER_BACK_URL = "back_url";
     
     //Attribute in session
     public static final String SESSION_ATTRIBUTE_BACK_URL = "back_url";

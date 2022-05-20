@@ -38,14 +38,6 @@
     <portlets>
    </portlets>
    
-   <!-- Filter for Back Url -->
-    <filters>
-        <filter>
-            <filter-name>backUrlFilter</filter-name>
-            <filter-class>fr.paris.lutece.plugins.verifybackurl.service.filter.BackUrlFilter</filter-class>
-            <url-pattern>/jsp/*</url-pattern>
-            <filter-order>-4000</filter-order>
-        </filter>
-    </filters>
+
     
 </plug-in>
