@@ -127,16 +127,14 @@ public class AuthorizedUrlService
     public String getServiceBackUrl(HttpServletRequest request,String strBackUrlParameter,String strBackUrlSessionName)
     {   	
     	 String strUrl= request.getParameter(strBackUrlParameter);
-    	 boolean checkConstraints = false;
-         if ( strUrl!= null)
+    	
+    	 
+         if ( strUrl!= null &&   ProcessConstraintsService.checkConstraints( strUrl ))
          {
-             checkConstraints = ProcessConstraintsService.checkConstraints( strUrl );
+        	 VerifiyBackUrlUtils.storeBackUrlInSession( request, strUrl,strBackUrlSessionName );
+
          }
-         if ( strBackUrlParameter!= null && checkConstraints )
-         {
-             VerifiyBackUrlUtils.storeBackUrlInSession( request, strUrl,strBackUrlSessionName );
-         }
-         else if ( strBackUrlParameter!= null && !checkConstraints )
+         else if ( strUrl!= null  )
          {
              //this is for the security : if a service provide a back url,
              //but this url breaks constaints, then drop the service in session
