@@ -14,19 +14,19 @@
     <name>Lutece verifybackurl plugin</name>
 
 	<repositories>
-			<repository>
-					<id>lutece</id>
-					<name>luteceRepository</name>
-					<url>http://dev.lutece.paris.fr/maven_repository</url>
-					<layout>default</layout>
-			</repository>
+		<repository>
+			<id>lutece</id>
+			<name>luteceRepository</name>
+			<url>http://dev.lutece.paris.fr/maven_repository</url>
+			<layout>default</layout>
+		</repository>
 	</repositories>
 
 	<dependencies>
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[5.0.0,)</version>
+            <version>[7.0.0,)</version>
             <type>lutece-core</type>
         </dependency>
     </dependencies>

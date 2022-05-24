@@ -1,12 +1,20 @@
-<#include "manageverifybackurl_tabs.html" />
-<@tabs tab="authorizedurl" />
-
-<@rowBoxHeader i18nTitleKey="verifybackurl.modify_authorizedurl.title">
-    <form class="form-horizontal" method="post" name="modify_authorizedurl" action="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp">
-        <@messages errors=errors />
-        <input type="hidden" id="id" name="id" value="${authorizedurl.id}"/>
-        <@fieldInputText i18nLabelKey="verifybackurl.modify_authorizedurl.labelName" inputName="name" mandatory=true value="${authorizedurl.name!''}" i18nHelpBlockKey="verifybackurl.modify_authorizedurl.labelName.help" />
-        <@fieldInputText i18nLabelKey="verifybackurl.modify_authorizedurl.labelUrl" inputName="url" mandatory=true value="${authorizedurl.url!''}" i18nHelpBlockKey="verifybackurl.modify_authorizedurl.labelUrl.help" />
-        <@actionButtons button1Name="action_modifyAuthorizedUrl" button2Name="view_manageAuthorizedUrl"/>
-    </form>
-</@rowBoxHeader>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{verifybackurl.modify_authorizedurl.title}' />
+			<@boxBody>
+				<@tform method='post' name='modify_authorizedurl' action='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp'>
+					<@messages errors=errors />
+					<@input type='hidden' id='id' name='id' value='${authorizedurl.id}' />
+					<@formGroup labelFor='name' labelKey='#i18n{verifybackurl.modify_authorizedurl.labelName}' helpKey='#i18n{verifybackurl.modify_authorizedurl.labelName.help}' mandatory=true>
+						<@input type='text' name='name' value='${authorizedurl.name!""}' />
+					</@formGroup>
+					<@formGroup labelFor='url' labelKey='#i18n{verifybackurl.modify_authorizedurl.labelUrl}' helpKey='#i18n{verifybackurl.modify_authorizedurl.labelUrl.help}' mandatory=true>
+						<@input type='text' name='url' value='${authorizedurl.url!""}' />
+					</@formGroup>
+					<@actionButtons button1Name='action_modifyAuthorizedUrl' button2Name='view_manageAuthorizedUrl' />
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
