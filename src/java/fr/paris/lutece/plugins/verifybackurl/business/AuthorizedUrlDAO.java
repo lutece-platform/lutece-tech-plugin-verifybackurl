@@ -48,12 +48,13 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
 {
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_authorized_url ) FROM verifybackurl_authorized_url";
-    private static final String SQL_QUERY_SELECT = "SELECT id_authorized_url, url, name FROM verifybackurl_authorized_url WHERE id_authorized_url = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO verifybackurl_authorized_url ( id_authorized_url, url, name ) VALUES ( ?, ?, ? ) ";
+    private static final String SQL_QUERY_SELECT = "SELECT id_authorized_url, url, name,application_code FROM verifybackurl_authorized_url WHERE id_authorized_url = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO verifybackurl_authorized_url ( id_authorized_url, url, name ,application_code) VALUES ( ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM verifybackurl_authorized_url WHERE id_authorized_url = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE verifybackurl_authorized_url SET id_authorized_url = ?, url = ?, name = ? WHERE id_authorized_url = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_authorized_url, url, name FROM verifybackurl_authorized_url";
+    private static final String SQL_QUERY_UPDATE = "UPDATE verifybackurl_authorized_url SET id_authorized_url = ?, url = ?, name = ?,application_code = ? WHERE id_authorized_url = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_authorized_url, url, name,application_code FROM verifybackurl_authorized_url";
     private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_authorized_url FROM verifybackurl_authorized_url";
+    private static final String SQL_QUERY_SELECTALL_BY_APPLICATION_CODE = SQL_QUERY_SELECTALL+" where application_code = ?";
 
     /**
      * Generates a new primary key
@@ -88,7 +89,8 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
         daoUtil.setInt( nIndex++ , authorizedUrl.getId( ) );
         daoUtil.setString( nIndex++ , authorizedUrl.getUrl( ) );
         daoUtil.setString( nIndex++ , authorizedUrl.getName( ) );
-
+        daoUtil.setString( nIndex++ , authorizedUrl.getApplicationCode() );
+        
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -112,6 +114,8 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
             authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
             authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
             authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
+            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
+            
         }
 
         daoUtil.free( );
@@ -142,6 +146,8 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
         daoUtil.setInt( nIndex++ , authorizedUrl.getId( ) );
         daoUtil.setString( nIndex++ , authorizedUrl.getUrl( ) );
         daoUtil.setString( nIndex++ , authorizedUrl.getName( ) );
+        daoUtil.setString( nIndex++ , authorizedUrl.getApplicationCode() );
+        
         daoUtil.setInt( nIndex , authorizedUrl.getId( ) );
 
         daoUtil.executeUpdate( );
@@ -166,6 +172,38 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
             authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
             authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
             authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
+            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
+
+            authorizedUrlList.add( authorizedUrl );
+        }
+
+        daoUtil.free( );
+        return authorizedUrlList;
+    }
+    
+    
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public List<AuthorizedUrl> selectAuthorizedUrlsByApplicationCode(String strApplicationCode,Plugin plugin )
+    {
+        List<AuthorizedUrl> authorizedUrlList = new ArrayList<AuthorizedUrl>(  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_BY_APPLICATION_CODE, plugin );
+        daoUtil.setString(1, strApplicationCode);
+        
+        daoUtil.executeQuery(  );
+
+        while ( daoUtil.next(  ) )
+        {
+            AuthorizedUrl authorizedUrl = new AuthorizedUrl(  );
+            int nIndex = 1;
+            
+            authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
+            authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
+            authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
+            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
 
             authorizedUrlList.add( authorizedUrl );
         }

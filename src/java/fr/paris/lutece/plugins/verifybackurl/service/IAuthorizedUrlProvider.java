@@ -40,8 +40,20 @@ public interface IAuthorizedUrlProvider
 {
     
     /**
-     * Get a list of Authorized Url
+     * Get a list of Authorized Url.
+     *
      * @return the list of authorized url
      */
     public List<AuthorizedUrl> getAuthorizedUrlsList( );
+    
+    /**
+     * Get a list of Authorized Url by applicartion Coed
+     * @return the list of authorized url by ApplicationCode
+     */
+    public List<AuthorizedUrl> getAuthorizedUrlsByApplicationCode(String strApplicationCode );
+    
+    
+    
+    
+    
 }

@@ -94,6 +94,34 @@ public class AuthorizedUrlService
         return null;
     }
     
+    /**
+     * Return the name of the urlAuthorized
+     * @param strApplicationCode the application Code
+     * @param url
+     * @return the name of the UrlAuthorized 
+     */
+    public String getNameByApplicationCode( String strApplicationCode,String url )
+    {
+    	  _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
+          
+          for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
+          {
+              _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsByApplicationCode(strApplicationCode));
+          }
+          if ( !_listAuthorizedUrl.isEmpty( ) )
+          {
+              for ( AuthorizedUrl strAuthUrl : _listAuthorizedUrl )
+              {
+                  if ( VerifiyBackUrlUtils.compareBaseUrl( strAuthUrl.getUrl( ), url ) )
+                  {
+                      return strAuthUrl.getName( );
+                  }
+              }
+          } 
+          return null;
+    }
+    
+    
     /** 
      * return the service back url if the url is authorized
      * @param request the request

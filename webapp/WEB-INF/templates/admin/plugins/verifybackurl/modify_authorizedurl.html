@@ -9,6 +9,9 @@
 					<@formGroup labelFor='name' labelKey='#i18n{verifybackurl.modify_authorizedurl.labelName}' helpKey='#i18n{verifybackurl.modify_authorizedurl.labelName.help}' mandatory=true>
 						<@input type='text' name='name' value='${authorizedurl.name!""}' />
 					</@formGroup>
+					<@formGroup labelFor='name' labelKey='#i18n{verifybackurl.modify_authorizedurl.labelApplicationCode}' helpKey='#i18n{verifybackurl.modify_authorizedurl.labelApplicationCode.help}' mandatory=true>
+						<@input type='text' name='name' value='${authorizedurl.applicationCode!""}' />
+					</@formGroup>
 					<@formGroup labelFor='url' labelKey='#i18n{verifybackurl.modify_authorizedurl.labelUrl}' helpKey='#i18n{verifybackurl.modify_authorizedurl.labelUrl.help}' mandatory=true>
 						<@input type='text' name='url' value='${authorizedurl.url!""}' />
 					</@formGroup>

@@ -51,6 +51,8 @@ public class AuthorizedUrl implements Serializable
     
     @NotEmpty( message = "#i18n{verifybackurl.validation.authorizedurl.Name.notEmpty}" )
     private String _strName;
+    
+    private String _strApplicationCode;
 
     /**
      * Returns the Id
@@ -105,4 +107,20 @@ public class AuthorizedUrl implements Serializable
     {
         _strName = strName;
     }
+
+    /**
+     * 
+     * @return the application code associate to the Url 
+     */
+	public String getApplicationCode() {
+		return _strApplicationCode;
+	}
+
+	/**
+	 * 
+	 * @param _strApplicationCode the application code associate to
+	 */
+	public void setApplicationCode(String _strApplicationCode) {
+		this._strApplicationCode = _strApplicationCode;
+	}
 }

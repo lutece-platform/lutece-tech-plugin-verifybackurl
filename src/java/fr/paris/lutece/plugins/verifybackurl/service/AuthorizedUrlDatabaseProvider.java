@@ -33,9 +33,10 @@
  */
 package fr.paris.lutece.plugins.verifybackurl.service;
 
+import java.util.List;
+
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrlHome;
-import java.util.List;
 
 public class AuthorizedUrlDatabaseProvider implements IAuthorizedUrlProvider
 {
@@ -47,5 +48,13 @@ public class AuthorizedUrlDatabaseProvider implements IAuthorizedUrlProvider
     {
         return AuthorizedUrlHome.getAuthorizedUrlsList( );
     }
+    /**
+     * {@inheritDoc } 
+     */
+	@Override
+	public List<AuthorizedUrl> getAuthorizedUrlsByApplicationCode(String strApplicationCode) {
+	
+		return AuthorizedUrlHome.getAuthorizedUrlsListByApplicationCode(strApplicationCode);
+	}
     
 }

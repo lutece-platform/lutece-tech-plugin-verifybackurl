@@ -83,6 +83,16 @@ public interface IAuthorizedUrlDAO
     List<AuthorizedUrl> selectAuthorizedUrlsList( Plugin plugin );
     
     /**
+     * Load the data of all the authorizedUrl objects filtered by application codeand returns them as a list
+     * @param strApplicationCode the application code
+     * @param plugin the Plugin
+     * @return The list which contains the data of all the authorizedUrl objects
+     */
+    
+    List<AuthorizedUrl> selectAuthorizedUrlsByApplicationCode(String strApplicationCode,Plugin plugin );
+    
+    
+    /**
      * Load the id of all the authorizedUrl objects and returns them as a list
      * @param plugin the Plugin
      * @return The list which contains the id of all the authorizedUrl objects

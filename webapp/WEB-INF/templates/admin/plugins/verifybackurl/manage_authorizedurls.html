@@ -12,6 +12,7 @@
 					<@table>
 						<@tr>
 							<@input type='hidden' id='id' name='id' />
+							<@th>#i18n{verifybackurl.manage_authorizedurls.columnApplicationCode}</@th>
 							<@th>#i18n{verifybackurl.manage_authorizedurls.columnName}</@th>
 							<@th>#i18n{verifybackurl.manage_authorizedurls.columnUrl}</@th>
 							<@th>#i18n{portal.util.labelActions}</@th>
@@ -20,6 +21,10 @@
 						<#list authorizedurl_list as authorizedurl >
 							<@tr>
 								<@input type='hidden' id='id' name='id' />
+								<@td>
+									${authorizedurl.applicationCode!''}
+								</@td>
+								
 								<@td>
 									${authorizedurl.name}
 								</@td>

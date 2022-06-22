@@ -109,6 +109,16 @@ public final class AuthorizedUrlHome
     }
     
     /**
+     * Load the data of all the authorizedUrl objects and returns them as a list
+     * @param strApplicationCode the application Code
+     * @return the list which contains the data of all the authorizedUrl objects
+     */
+    public static List<AuthorizedUrl> getAuthorizedUrlsListByApplicationCode(String strApplicationCode )
+    {
+        return _dao.selectAuthorizedUrlsByApplicationCode(strApplicationCode, _plugin );
+    }
+    
+    /**
      * Load the id of all the authorizedUrl objects and returns them as a list
      * @return the list which contains the id of all the authorizedUrl objects
      */
