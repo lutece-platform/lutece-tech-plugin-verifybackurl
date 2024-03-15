@@ -31,29 +31,23 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.verifybackurl.utils;
+package fr.paris.lutece.plugins.verifybackurl.service;
 
-public class VerifyBackUrlConstants
+import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
+
+/**
+ * 
+ * CharactersDomainConstraint
+ *
+ */
+public class CharactersDomainConstraint implements IBackUrlConstraint
 {
-    //Constants for back url domain checking
-    public static final String PROPERTY_AUTHORIZED_DOMAINS_BACK_URL = "verifybackurl.backUrl.authorizedDomainsBackUrl";
-    public static final String PROPERTY_AUTHORIZED_DOMAINS = "verifybackurl.backUrl.authorizedDomains";
-    public static final String PROPERTY_PATTERN_UNAUTHORIZED_BACK_URL = "verifybackurl.backUrl.unauthorizedBackUrl";
-    public static final String COMMA = ",";
-    
-    //Constants for unauthorized HTMl checking
-    public static final String PROPERTY_AUTHORIZED_HTML = "verifybackurl.unauthorizedHTML";
-    
-    //Constants for getting the Name of the service
-    public static final String PROPERTY_REGEXP_BASE_URL = "verifybackurl.backUrl.regex.baseUrl";
-    
-    //Parameters in requests
-    public static final String PARAMETER_BACK_URL = "back_url";
-    
-    //Attribute in session
-    public static final String SESSION_ATTRIBUTE_BACK_URL = "back_url";
-    
-    //Constants for unauthorized characters for domain
-    public static final String PROPERTY_UNAUTHORIZED_CHARACTERS_DOMAIN = "verifybackurl.unauthorizedCharactersDomain";
-        
+    /**
+     * {@inheritDoc}  
+     */
+    @Override
+    public boolean checkConstraint ( String url )
+    {
+        return VerifiyBackUrlUtils.containsUnauthorizedCharactersDomain( url );
+    }  
 }

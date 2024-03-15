@@ -97,6 +97,21 @@ public class VerifiyBackUrlUtils
 
         return isValid;
     }
+
+    /**
+     * Test if the BackUrl is a valid url
+     * 
+     * @param strBackUrl
+     *            the back url to test
+     * @return Test if the BackUrl is a valid url
+     */
+    public static boolean containsUnauthorizedCharactersDomain( String strBackUrl )
+    { 
+        String strPatterUnAuthorizedCharactersDomain = AppPropertiesService.getProperty( VerifyBackUrlConstants.PROPERTY_UNAUTHORIZED_CHARACTERS_DOMAIN );
+
+        return strBackUrl.matches( strPatterUnAuthorizedCharactersDomain );
+    }
+    
     
     /**
      * Compare to base url
