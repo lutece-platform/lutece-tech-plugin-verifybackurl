@@ -7,6 +7,8 @@
     <!-- Constraints Back Url -->
     <bean id="verifybackurl.domainNameConstraint" class="fr.paris.lutece.plugins.verifybackurl.service.DomainNameConstraint"/>
     <bean id="verifybackurl.noHTMLConstraint" class="fr.paris.lutece.plugins.verifybackurl.service.NoHTMLConstraint"/>
+    <bean id="verifybackurl.charactersDomainConstraint" class="fr.paris.lutece.plugins.verifybackurl.service.CharactersDomainConstraint"/>
+    
 
     <!-- DAO -->
     <bean id="verifybackurl.authorizedUrlDAO" class="fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrlDAO" />
