@@ -55,5 +55,10 @@ public class VerifyBackUrlConstants
     
     //Constants for unauthorized characters for domain
     public static final String PROPERTY_UNAUTHORIZED_CHARACTERS_DOMAIN = "verifybackurl.unauthorizedCharactersDomain";
+    
+    public static final String PROPERTY_ENABLE_BASE64_DECODE="verifybackurl.enableBase64Decode";
+    public static final String PROPERTY_ENABLE_BASE64_DECODE_FOR_URL_PATTERN="verifybackurl.enableBase64DecodeForUrlPattern";
+    
+    
         
 }

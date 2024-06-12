@@ -34,6 +34,9 @@
 package fr.paris.lutece.plugins.verifybackurl.utils;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -182,6 +185,17 @@ public class VerifiyBackUrlUtils
     {
         HttpSession session = request.getSession( true ); 
         return (String) session.getAttribute( strSessionAttributeName);
+    }
+    
+    /**
+     * encode url in base64
+     * @param strUrl the url to encode
+     * @return an url encode in base64
+     */
+    public  static String  encodeUrl(String strUrl)
+    {
+    	return !StringUtils.isEmpty(strUrl) ?  new String(Base64.getUrlEncoder().encode(strUrl.getBytes( StandardCharsets.UTF_8 ))):"";
+    	
     }
     
     

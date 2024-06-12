@@ -33,23 +33,31 @@
  */
 package fr.paris.lutece.plugins.verifybackurl.service;
 
-import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
-import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
-import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
+import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
+import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
+import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
+import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
+
+/**
+ * The Class AuthorizedUrlService.
+ */
 public class AuthorizedUrlService
 {
     private static List<AuthorizedUrl> _listAuthorizedUrl;
     
     private static AuthorizedUrlService _instance;
-    
-    /**
+      /**
      * Get instance of AuthorizedUrlService
      * @return instance
      */
@@ -58,7 +66,7 @@ public class AuthorizedUrlService
         if ( _instance == null )
         {
             _instance = new AuthorizedUrlService( );
-            
+                
         }
         return _instance;
     }
@@ -145,8 +153,10 @@ public class AuthorizedUrlService
     }
     
     
-    /** 
-     * return the service back url if the url is authorized
+    /**
+     *  
+     * return the service back url if the url is authorized.
+     *
      * @param request the request
      * @param strBackUrlParameter  the parameter name of the service back url
      * @param strBackUrlSessionName The session attribute name who is stored the back url
@@ -156,6 +166,17 @@ public class AuthorizedUrlService
     {   	
     	 String strUrl= request.getParameter(strBackUrlParameter);
     	
+    	 //try to decode url if b64 decode is enable 
+    	 if(strUrl!=null &&  !StringUtils.isEmpty(strUrl) &&  AppPropertiesService.getPropertyBoolean(VerifyBackUrlConstants.PROPERTY_ENABLE_BASE64_DECODE, false) && strUrl.matches( AppPropertiesService.getProperty(VerifyBackUrlConstants.PROPERTY_ENABLE_BASE64_DECODE_FOR_URL_PATTERN)))
+    	 {
+    		 try {
+    			 strUrl=new String(Base64.getUrlDecoder().decode(strUrl.getBytes( StandardCharsets.UTF_8 )));
+			} catch (IllegalArgumentException  e) {
+				AppLogService.info("the back url is not encoded in base64 {} ", strUrl,e);
+			}
+    		 
+    	 }
+    	 
     	 
          if ( strUrl!= null &&   ProcessConstraintsService.checkConstraints( strUrl ))
          {
@@ -171,6 +192,60 @@ public class AuthorizedUrlService
     	
     	return VerifiyBackUrlUtils.getBackUrlInSession(request,strBackUrlSessionName);
     }
+    
+    
+    
+    /**
+     *  
+     * return the service back url encode if the url is authorized and the decode base 64 property is enable
+     *
+     * @param request the request
+     * @param strBackUrlParameter  the parameter name of the service back url
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrlEncoded(HttpServletRequest request)
+    {   
+    	
+    	return  getServiceBackUrlEncoded(request, VerifyBackUrlConstants.PARAMETER_BACK_URL, VerifyBackUrlConstants.SESSION_ATTRIBUTE_BACK_URL);
+    	
+    }
+    
+    
+    /**
+     *  
+     * return the service back url encode if the url is authorized and the decode base 64 property is enable 
+     *
+     * @param request the request
+     * @param strBackUrlParameter  the parameter name of the service back url
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrlEncoded(HttpServletRequest request,String strBackUrlParameter)
+    {   
+    	
+    	return  getServiceBackUrlEncoded(request, strBackUrlParameter, VerifyBackUrlConstants.SESSION_ATTRIBUTE_BACK_URL);
+    	
+    }
+    
+    
+    /**
+     *  
+     * return the service back url encode if the url is authorized and the decode base 64 property is enable 
+     *
+     * @param request the request
+     * @param strBackUrlParameter  the parameter name of the service back url
+     * @param strBackUrlSessionName The session attribute name who is stored the back url
+     * @return the service back url if the url is authorized
+     */
+    public String getServiceBackUrlEncoded(HttpServletRequest request,String strBackUrlParameter,String strBackUrlSessionName)
+    {   
+    	
+    	return  VerifiyBackUrlUtils.encodeUrl(getServiceBackUrl(request, strBackUrlParameter, strBackUrlSessionName));
+    	
+    	
+    }
+    
+    
+   
     
     
 }
