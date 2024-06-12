@@ -239,7 +239,7 @@ public class AuthorizedUrlService
     public String getServiceBackUrlEncoded(HttpServletRequest request,String strBackUrlParameter,String strBackUrlSessionName)
     {   
     	
-    	return  VerifiyBackUrlUtils.encodeUrl(getServiceBackUrl(request, strBackUrlParameter, strBackUrlSessionName));
+    	return   AppPropertiesService.getPropertyBoolean(VerifyBackUrlConstants.PROPERTY_ENABLE_BASE64_DECODE, false)?VerifiyBackUrlUtils.encodeUrl(getServiceBackUrl(request, strBackUrlParameter, strBackUrlSessionName)):getServiceBackUrl(request, strBackUrlParameter, strBackUrlSessionName);
     	
     	
     }
