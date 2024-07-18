@@ -33,7 +33,7 @@
  */
 package fr.paris.lutece.plugins.verifybackurl.service;
 
-import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
+import fr.paris.lutece.plugins.verifybackurl.business.ApplicationAuthorized;
 import java.util.List;
 
 public interface IAuthorizedUrlProvider
@@ -44,13 +44,13 @@ public interface IAuthorizedUrlProvider
      *
      * @return the list of authorized url
      */
-    public List<AuthorizedUrl> getAuthorizedUrlsList( );
+    public List<ApplicationAuthorized> getAuthorizedUrlsList( );
     
     /**
      * Get a list of Authorized Url by applicartion Coed
      * @return the list of authorized url by ApplicationCode
      */
-    public List<AuthorizedUrl> getAuthorizedUrlsByApplicationCode(String strApplicationCode );
+    public ApplicationAuthorized getAuthorizedUrlsByApplicationCode( String strApplicationCode );
     
     
     

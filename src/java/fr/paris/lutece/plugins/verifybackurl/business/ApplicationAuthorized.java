@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2016, Mairie de Paris
+ * Copyright (c) 2002-2024, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,53 +33,89 @@
  */ 
 package fr.paris.lutece.plugins.verifybackurl.business;
 
-import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.validator.constraints.*;
 
 /**
- * This is the business class for the object AuthorizedUrl
- */ 
-public class AuthorizedUrl implements Serializable
+ * 
+ * ApplicationAuthorized
+ *
+ */
+public class ApplicationAuthorized
 {
-    private static final long serialVersionUID = 1L;
-
     // Variables declarations 
+    private int _nId;
     
-    private int _nIdApplicationCode;   
-    private String _strUrl;
-
-    /**
-     * Returns the Id
-     * @return The Id
-     */
-    public int getIdApplication( )
-    {
-        return _nIdApplicationCode;
-    }
-
-    /**
-     * Sets the IdApplicationCode
-     * @param nIdApplicationCode The IdApplicationCode
-     */ 
-    public void setIdApplication( int nIdApplicationCode )
-    {
-        _nIdApplicationCode = nIdApplicationCode;
-    }
+    @NotEmpty( message = "#i18n{verifybackurl.validation.authorizedurl.Name.notEmpty}" )
+    private String _strName;
     
+    private String _strApplicationCode;
+    
+    private List<AuthorizedUrl> listAuthorizedUrl;
+
     /**
-     * Returns the Url
-     * @return The Url
+     * @return the _nId
      */
-    public String getUrl( )
+    public int getId( )
     {
-        return _strUrl;
+        return _nId;
     }
 
     /**
-     * Sets the Url
-     * @param strUrl The Url
-     */ 
-    public void setUrl( String strUrl )
+     * @param nId the _nId to set
+     */
+    public void setId( int nId )
     {
-        _strUrl = strUrl;
+        this._nId = nId;
     }
+
+    /**
+     * @return the _strName
+     */
+    public String getName( )
+    {
+        return _strName;
+    }
+
+    /**
+     * @param strName the strName to set
+     */
+    public void setName( String strName )
+    {
+        this._strName = strName;
+    }
+
+    /**
+     * @return the _strApplicationCode
+     */
+    public String getApplicationCode( )
+    {
+        return _strApplicationCode;
+    }
+
+    /**
+     * @param strApplicationCode the _strApplicationCode to set
+     */
+    public void setApplicationCode( String strApplicationCode )
+    {
+        this._strApplicationCode = strApplicationCode;
+    }
+
+    /**
+     * @return the listAuthorizedUrl
+     */
+    public List<AuthorizedUrl> getListAuthorizedUrl( )
+    {
+        return listAuthorizedUrl;
+    }
+
+    /**
+     * @param listAuthorizedUrl the listAuthorizedUrl to set
+     */
+    public void setListAuthorizedUrl( List<AuthorizedUrl> listAuthorizedUrl )
+    {
+        this.listAuthorizedUrl = listAuthorizedUrl;
+    }
+
 }

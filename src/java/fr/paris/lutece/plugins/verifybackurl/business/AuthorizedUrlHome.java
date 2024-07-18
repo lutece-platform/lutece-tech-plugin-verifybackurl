@@ -67,26 +67,14 @@ public final class AuthorizedUrlHome
 
         return authorizedUrl;
     }
-
-    /**
-     * Update of the authorizedUrl which is specified in parameter
-     * @param authorizedUrl The instance of the AuthorizedUrl which contains the data to store
-     * @return The instance of the  authorizedUrl which has been updated
-     */
-    public static AuthorizedUrl update( AuthorizedUrl authorizedUrl )
-    {
-        _dao.store( authorizedUrl, _plugin );
-
-        return authorizedUrl;
-    }
-
+    
     /**
      * Remove the authorizedUrl whose identifier is specified in parameter
-     * @param nKey The authorizedUrl Id
+     * @param nApplicationId The application id
      */
-    public static void remove( int nKey )
+    public static void removeByApplicationId( int nApplicationId )
     {
-        _dao.delete( nKey, _plugin );
+        _dao.deleteByApplicationId( nApplicationId, _plugin );
     }
 
     /**
@@ -107,24 +95,16 @@ public final class AuthorizedUrlHome
     {
         return _dao.selectAuthorizedUrlsList( _plugin );
     }
+
     
     /**
      * Load the data of all the authorizedUrl objects and returns them as a list
-     * @param strApplicationCode the application Code
+     * @param nApplicationId the application Id
      * @return the list which contains the data of all the authorizedUrl objects
      */
-    public static List<AuthorizedUrl> getAuthorizedUrlsListByApplicationCode(String strApplicationCode )
+    public static List<AuthorizedUrl> getAuthorizedUrlsListByApplicationId(Integer nApplicationId )
     {
-        return _dao.selectAuthorizedUrlsByApplicationCode(strApplicationCode, _plugin );
-    }
-    
-    /**
-     * Load the id of all the authorizedUrl objects and returns them as a list
-     * @return the list which contains the id of all the authorizedUrl objects
-     */
-    public static List<Integer> getIdAuthorizedUrlsList( )
-    {
-        return _dao.selectIdAuthorizedUrlsList( _plugin );
+        return _dao.selectAuthorizedUrlsByApplicationId(nApplicationId, _plugin );
     }
     
     /**

@@ -1,0 +1,40 @@
+
+<@box>
+	<@boxHeader title='#i18n{verifybackurl.manage_applicationauthorized.title}' boxTools=true>
+		<@tform class='form-inline pull-right' name='manage_applicationauthorized' action='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp'>
+			<@button type='submit' name='view_createApplicationAuthorized' buttonIcon='plus' title='#i18n{verifybackurl.manage_applicationauthorizeds.buttonAdd}' />
+		</@tform>
+	</@boxHeader>
+	<@boxBody>    
+    <@messages infos=infos />
+    <@paginationAdmin paginator=paginator combo=1 />
+    <div class="clearfix"></div>
+    <@table>
+        <tr>
+            <th>#i18n{verifybackurl.manage_applicationauthorizeds.columnName}</th>
+            <th>#i18n{verifybackurl.manage_applicationauthorizeds.columnApplicationCode}</th>
+            <th>#i18n{portal.util.labelActions}</th>
+        </tr>
+        <@tableHeadBodySeparator />
+        <#list applicationauthorized_list as applicationauthorized >
+        <tr>
+            <td>
+				${applicationauthorized.name}
+			</td>
+            <td>
+				${applicationauthorized.applicationCode}
+			</td>
+        	<td>
+				<@aButton href='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?view=modifyApplicationAuthorized&id=${applicationauthorized.id}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='pencil' />
+						
+				<@aButton href='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?action=confirmRemoveApplicationAuthorized&id=${applicationauthorized.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] color='btn-danger'  />
+
+	        </td>
+        </tr>
+        </#list>
+    </@table>
+
+    <@paginationAdmin paginator=paginator />
+
+  </@boxBody>
+</@box>
