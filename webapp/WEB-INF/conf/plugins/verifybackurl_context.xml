@@ -13,6 +13,9 @@
     <!-- DAO -->
     <bean id="verifybackurl.authorizedUrlDAO" class="fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrlDAO" />
 
+    <!-- DAO -->
+    <bean id="verifybackurl.applicationAuthorizedDAO" class="fr.paris.lutece.plugins.verifybackurl.business.ApplicationAuthorizedDAO" />
+    
     <!-- URL Authorized Providers -->
     <bean id="verifybackurl.urlAuthorizedDatabaseProvider" class="fr.paris.lutece.plugins.verifybackurl.service.AuthorizedUrlDatabaseProvider" />
 

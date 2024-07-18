@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
+import fr.paris.lutece.plugins.verifybackurl.business.ApplicationAuthorized;
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
@@ -53,9 +54,7 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
  * The Class AuthorizedUrlService.
  */
 public class AuthorizedUrlService
-{
-    private static List<AuthorizedUrl> _listAuthorizedUrl;
-    
+{    
     private static AuthorizedUrlService _instance;
       /**
      * Get instance of AuthorizedUrlService
@@ -83,19 +82,26 @@ public class AuthorizedUrlService
      */
     public String getName( String url )
     {
-        _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
+        List<ApplicationAuthorized> listApplicationAuthorized = new ArrayList< >();
             
         for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
         {
-            _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsList( ) );
+            listApplicationAuthorized.addAll( provider.getAuthorizedUrlsList( ) );
         }
-        if ( !_listAuthorizedUrl.isEmpty( ) )
+        
+        if ( !listApplicationAuthorized.isEmpty( ) )
         {
-            for ( AuthorizedUrl strAuthUrl : _listAuthorizedUrl )
+            for ( ApplicationAuthorized application : listApplicationAuthorized )
             {
-                if ( VerifiyBackUrlUtils.compareBaseUrl( strAuthUrl.getUrl( ), url ) )
+                if( application.getListAuthorizedUrl( ) != null )
                 {
-                    return strAuthUrl.getName( );
+                    for( AuthorizedUrl authUrl : application.getListAuthorizedUrl( ) )
+                    {
+                        if ( VerifiyBackUrlUtils.compareBaseUrl( authUrl.getUrl( ), url ) )
+                        {
+                            return application.getName( );
+                        }
+                    }
                 }
             }
         } 
@@ -110,19 +116,18 @@ public class AuthorizedUrlService
      */
     public String getNameByApplicationCode( String strApplicationCode,String url )
     {
-    	  _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
-          
+          ApplicationAuthorized application = new ApplicationAuthorized( );
           for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
           {
-              _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsByApplicationCode(strApplicationCode));
+              application = provider.getAuthorizedUrlsByApplicationCode(strApplicationCode) ;
           }
-          if ( !_listAuthorizedUrl.isEmpty( ) )
+          if ( application != null )
           {
-              for ( AuthorizedUrl strAuthUrl : _listAuthorizedUrl )
+              for ( AuthorizedUrl strAuthUrl : application.getListAuthorizedUrl( ) )
               {
                   if ( VerifiyBackUrlUtils.compareBaseUrl( strAuthUrl.getUrl( ), url ) )
                   {
-                      return strAuthUrl.getName( );
+                      return application.getName( );
                   }
               }
           } 

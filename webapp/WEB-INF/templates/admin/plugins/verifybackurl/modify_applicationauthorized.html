@@ -1,0 +1,76 @@
+<#include "manageverifybackurl_tabs.html" />
+<@tabs2 tab="applicationauthorized" />
+
+
+<@box>
+	<@boxHeader title='#i18n{verifybackurl.modify_applicationauthorized.title}' />
+	<@boxBody>
+    <@tform class="form-horizontal" method="post" name="modify_applicationauthorized" action="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp" >
+			<@messages errors=errors />
+			<@input type="hidden" id="id" name="id" value="${applicationauthorized.id}"/>
+			<@input type="hidden" value="${token}" name="token" />
+			
+			<@formGroup labelFor='name' labelKey='#i18n{verifybackurl.modify_applicationauthorized.labelName}' mandatory=true>
+				<@input type='text' id='name' name='name'  value='${applicationauthorized.name!\'\'}' tabIndex='0' />
+			</@formGroup>
+			<@formGroup labelFor='application_code' labelKey='#i18n{verifybackurl.modify_applicationauthorized.labelApplicationCode}' mandatory=true>
+				<@input type='text' id='application_code' name='application_code'  maxlength=255 value='${applicationauthorized.applicationCode!\'\'}' tabIndex='1' />
+			</@formGroup>
+			<@div class="row mb-4">
+				<@div class="col-8">
+					<@formGroup labelFor='name' id="group-url" labelKey='#i18n{verifybackurl.modify_applicationauthorized.labelUrlList}' mandatory=true>
+						<#if applicationauthorized.listAuthorizedUrl?? && applicationauthorized.listAuthorizedUrl?has_content>
+						<#list applicationauthorized.listAuthorizedUrl as authorizedUrl >
+							<@div class="row mt-4 input-url">
+								<@div class="col-8">
+									<@input type='text' name="url" value='${authorizedUrl.url!\'\'}' tabIndex='0' />
+								</@div>
+								<@div class="col-2">
+									<@button class="delete-url" title='#i18n{portal.util.labelDelete}' buttonIcon='trash' hideTitle=['all'] color='btn btn-danger' />
+								</@div>
+							</@div>
+						</#list>
+						</#if>
+					</@formGroup>
+					<@button class="btn btn-primary" id="addUrl">Ajouter une URL</@button>
+				</@div>
+			</@div>
+        <@actionButtons button1Name="action_modifyApplicationAuthorized" button2Name="view_manageApplicationAuthorized"/>
+    </@tform>
+	</@boxBody>
+</@box>
+<script>
+$(document).ready(function(){
+
+	//load
+	elementInputButton();
+	
+	//Url block
+	var urlBlock = `<@div class="row mt-4 input-url">`
+		+ `<@div class="col-8">`
+		+ `<@input type="text" name="url" tabIndex="0" /></@div>`
+		+ `<@div class="col-2">`
+		+ `<@button class="delete-url" title="#i18n{portal.util.labelDelete}" buttonIcon="trash" hideTitle=["all"] color="btn btn-danger" /></@div></@div>`;
+
+		
+	//Add url
+	$('#addUrl').click(function(){
+		$('#group-url').append( urlBlock );		
+		elementInputButton();
+	});
+	
+ 	//Delete url
+	$('body').on('click','.delete-url', function(){
+		var id = $(this).attr("id");
+		$('#input-url-' + id).remove();
+		elementInputButton()
+	});
+	
+	function elementInputButton(){
+		$('.input-url').each(function( index ) {
+			$(this).attr("id", "input-url-" + index );
+			$(this).find('button').attr("id", index );
+		});
+	}
+});
+</script>
