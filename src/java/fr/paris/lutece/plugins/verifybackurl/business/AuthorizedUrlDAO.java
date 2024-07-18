@@ -47,34 +47,11 @@ import java.util.List;
 public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
 {
     // Constants
-    private static final String SQL_QUERY_NEW_PK = "SELECT max( id_authorized_url ) FROM verifybackurl_authorized_url";
-    private static final String SQL_QUERY_SELECT = "SELECT id_authorized_url, url, name,application_code FROM verifybackurl_authorized_url WHERE id_authorized_url = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO verifybackurl_authorized_url ( id_authorized_url, url, name ,application_code) VALUES ( ?, ?, ?, ? ) ";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM verifybackurl_authorized_url WHERE id_authorized_url = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE verifybackurl_authorized_url SET id_authorized_url = ?, url = ?, name = ?,application_code = ? WHERE id_authorized_url = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_authorized_url, url, name,application_code FROM verifybackurl_authorized_url";
-    private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_authorized_url FROM verifybackurl_authorized_url";
-    private static final String SQL_QUERY_SELECTALL_BY_APPLICATION_CODE = SQL_QUERY_SELECTALL+" where application_code = ?";
-
-    /**
-     * Generates a new primary key
-     * @param plugin The Plugin
-     * @return The new primary key
-     */
-    public int newPrimaryKey( Plugin plugin)
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK , plugin  );
-        daoUtil.executeQuery( );
-        int nKey = 1;
-
-        if( daoUtil.next( ) )
-        {
-            nKey = daoUtil.getInt( 1 ) + 1;
-        }
-
-        daoUtil.free();
-        return nKey;
-    }
+    private static final String SQL_QUERY_SELECT = "SELECT id_application, url FROM verifybackurl_authorized_url WHERE id_authorized_url = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO verifybackurl_authorized_url ( id_application, url ) VALUES ( ?, ? ) ";
+    private static final String SQL_QUERY_DELETE_BY_APPLICATION_ID = "DELETE FROM verifybackurl_authorized_url WHERE id_application = ? ";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_application, url FROM verifybackurl_authorized_url";
+    private static final String SQL_QUERY_SELECTALL_BY_APPLICATION_ID = SQL_QUERY_SELECTALL+" where id_application = ?";
 
     /**
      * {@inheritDoc }
@@ -82,17 +59,15 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
     @Override
     public void insert( AuthorizedUrl authorizedUrl, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        authorizedUrl.setId( newPrimaryKey( plugin ) );
-        int nIndex = 1;
-        
-        daoUtil.setInt( nIndex++ , authorizedUrl.getId( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getUrl( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getName( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getApplicationCode() );
-        
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+            int nIndex = 1;
+            
+            daoUtil.setInt( nIndex++ , authorizedUrl.getIdApplication( ) );
+            daoUtil.setString( nIndex++ , authorizedUrl.getUrl( ) );
+            
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -101,57 +76,34 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
     @Override
     public AuthorizedUrl load( int nKey, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1 , nKey );
-        daoUtil.executeQuery( );
-        AuthorizedUrl authorizedUrl = null;
-
-        if ( daoUtil.next( ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            authorizedUrl = new AuthorizedUrl();
-            int nIndex = 1;
-            
-            authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
-            authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
-            
+            daoUtil.setInt( 1 , nKey );
+            daoUtil.executeQuery( );
+            AuthorizedUrl authorizedUrl = null;
+    
+            if ( daoUtil.next( ) )
+            {
+                authorizedUrl = new AuthorizedUrl();
+                int nIndex = 1;
+                
+                authorizedUrl.setIdApplication( daoUtil.getInt( nIndex++ ) );
+                authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
+                
+            }
+    
+            return authorizedUrl;
         }
-
-        daoUtil.free( );
-        return authorizedUrl;
     }
-
-    /**
-     * {@inheritDoc }
-     */
+    
     @Override
-    public void delete( int nKey, Plugin plugin )
+    public void deleteByApplicationId( int nApplicationId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1 , nKey );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void store( AuthorizedUrl authorizedUrl, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        int nIndex = 1;
-        
-        daoUtil.setInt( nIndex++ , authorizedUrl.getId( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getUrl( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getName( ) );
-        daoUtil.setString( nIndex++ , authorizedUrl.getApplicationCode() );
-        
-        daoUtil.setInt( nIndex , authorizedUrl.getId( ) );
-
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_APPLICATION_ID, plugin ) )
+        {
+            daoUtil.setInt( 1 , nApplicationId );
+            daoUtil.executeUpdate( );
+        }
     }
 
     /**
@@ -160,76 +112,53 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
     @Override
     public List<AuthorizedUrl> selectAuthorizedUrlsList( Plugin plugin )
     {
-        List<AuthorizedUrl> authorizedUrlList = new ArrayList<AuthorizedUrl>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            AuthorizedUrl authorizedUrl = new AuthorizedUrl(  );
-            int nIndex = 1;
-            
-            authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
-            authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
-
-            authorizedUrlList.add( authorizedUrl );
-        }
-
-        daoUtil.free( );
-        return authorizedUrlList;
-    }
-    
-    
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public List<AuthorizedUrl> selectAuthorizedUrlsByApplicationCode(String strApplicationCode,Plugin plugin )
-    {
-        List<AuthorizedUrl> authorizedUrlList = new ArrayList<AuthorizedUrl>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_BY_APPLICATION_CODE, plugin );
-        daoUtil.setString(1, strApplicationCode);
+        List<AuthorizedUrl> authorizedUrlList = new ArrayList<>(  );
         
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            AuthorizedUrl authorizedUrl = new AuthorizedUrl(  );
-            int nIndex = 1;
-            
-            authorizedUrl.setId( daoUtil.getInt( nIndex++ ) );
-            authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setName( daoUtil.getString( nIndex++ ) );
-            authorizedUrl.setApplicationCode( daoUtil.getString( nIndex++ ) );
-
-            authorizedUrlList.add( authorizedUrl );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                AuthorizedUrl authorizedUrl = new AuthorizedUrl(  );
+                int nIndex = 1;
+                
+                authorizedUrl.setIdApplication( daoUtil.getInt( nIndex++ ) );
+                authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
+    
+                authorizedUrlList.add( authorizedUrl );
+            }
+    
+            return authorizedUrlList;
         }
-
-        daoUtil.free( );
-        return authorizedUrlList;
     }
     
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    public List<Integer> selectIdAuthorizedUrlsList( Plugin plugin )
+    public List<AuthorizedUrl> selectAuthorizedUrlsByApplicationId( Integer nApplicationId, Plugin plugin )
     {
-        List<Integer> authorizedUrlList = new ArrayList<Integer>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        List<AuthorizedUrl> authorizedUrlList = new ArrayList<>(  );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_BY_APPLICATION_ID, plugin ) )
         {
-            authorizedUrlList.add( daoUtil.getInt( 1 ) );
+            daoUtil.setInt(1, nApplicationId );
+            
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                AuthorizedUrl authorizedUrl = new AuthorizedUrl(  );
+                int nIndex = 1;
+                
+                authorizedUrl.setIdApplication( daoUtil.getInt( nIndex++ ) );
+                authorizedUrl.setUrl( daoUtil.getString( nIndex++ ) );
+    
+                authorizedUrlList.add( authorizedUrl );
+            }
+    
+            return authorizedUrlList;
         }
-
-        daoUtil.free( );
-        return authorizedUrlList;
     }
+    
     
     /**
      * {@inheritDoc }
@@ -238,15 +167,17 @@ public final class AuthorizedUrlDAO implements IAuthorizedUrlDAO
     public ReferenceList selectAuthorizedUrlsReferenceList( Plugin plugin )
     {
         ReferenceList authorizedUrlList = new ReferenceList();
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            authorizedUrlList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                authorizedUrlList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
+            }
+    
+            return authorizedUrlList;
         }
-
-        daoUtil.free( );
-        return authorizedUrlList;
     }
+
 }

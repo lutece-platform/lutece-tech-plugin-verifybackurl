@@ -49,20 +49,13 @@ public interface IAuthorizedUrlDAO
      * @param plugin the Plugin
      */
     void insert( AuthorizedUrl authorizedUrl, Plugin plugin );
-
-    /**
-     * Update the record in the table
-     * @param authorizedUrl the reference of the AuthorizedUrl
-     * @param plugin the Plugin
-     */
-    void store( AuthorizedUrl authorizedUrl, Plugin plugin );
-
+    
     /**
      * Delete a record from the table
-     * @param nKey The identifier of the AuthorizedUrl to delete
+     * @param nApplicationId The application id to delete
      * @param plugin the Plugin
      */
-    void delete( int nKey, Plugin plugin );
+    void deleteByApplicationId( int nApplicationId, Plugin plugin );
 
     ///////////////////////////////////////////////////////////////////////////
     // Finders
@@ -83,21 +76,13 @@ public interface IAuthorizedUrlDAO
     List<AuthorizedUrl> selectAuthorizedUrlsList( Plugin plugin );
     
     /**
-     * Load the data of all the authorizedUrl objects filtered by application codeand returns them as a list
-     * @param strApplicationCode the application code
+     * Load the data of all the authorizedUrl objects filtered by application id and returns them as a list
+     * @param nApplicationId the application id
      * @param plugin the Plugin
      * @return The list which contains the data of all the authorizedUrl objects
      */
     
-    List<AuthorizedUrl> selectAuthorizedUrlsByApplicationCode(String strApplicationCode,Plugin plugin );
-    
-    
-    /**
-     * Load the id of all the authorizedUrl objects and returns them as a list
-     * @param plugin the Plugin
-     * @return The list which contains the id of all the authorizedUrl objects
-     */
-    List<Integer> selectIdAuthorizedUrlsList( Plugin plugin );
+    List<AuthorizedUrl> selectAuthorizedUrlsByApplicationId(Integer nApplicationId,Plugin plugin );
     
     /**
      * Load the data of all the authorizedUrl objects and returns them as a referenceList
