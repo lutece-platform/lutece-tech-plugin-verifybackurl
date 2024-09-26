@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-verifybackurl</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <name>Lutece verifybackurl plugin</name>
 
 	<repositories>
@@ -41,6 +41,6 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-verifybackurl.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-verifybackurl.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-tech-plugin-verifybackurl.git</url>
-        <tag>HEAD</tag>
+        <tag>plugin-verifybackurl-1.0.3</tag>
     </scm>
 </project>
