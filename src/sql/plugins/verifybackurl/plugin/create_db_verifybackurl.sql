@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset core:create_db_verifybackurl.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 
 --
 -- Structure for table verifybackurl_authorized_url
