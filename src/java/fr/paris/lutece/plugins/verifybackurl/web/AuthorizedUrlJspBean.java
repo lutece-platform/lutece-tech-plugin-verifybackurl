@@ -37,20 +37,33 @@ import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrlHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.util.AppException;
+import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.RequestParam;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.ResponseBody;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
+import fr.paris.lutece.portal.web.cdi.mvc.Models;
+import fr.paris.lutece.portal.web.util.IPager;
+import fr.paris.lutece.portal.web.util.Pager;
 import fr.paris.lutece.util.url.UrlItem;
 
 import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides the user interface to manage AuthorizedUrl features ( manage, create, modify, remove )
  */
-@Controller( controllerJsp = "ManageAuthorizedUrls.jsp", controllerPath = "jsp/admin/plugins/verifybackurl/", right = "VERIFYBACKURL_MANAGEMENT" )
-public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
+@RequestScoped
+@Named
+@Controller( controllerJsp = "ManageAuthorizedUrls.jsp", controllerPath = "jsp/admin/plugins/verifybackurl/", right = "VERIFYBACKURL_MANAGEMENT", securityTokenEnabled = true )
+public class AuthorizedUrlJspBean extends MVCAdminJspBean
 {
     // Templates
     private static final String TEMPLATE_MANAGE_AUTHORIZEDURLS = "/admin/plugins/verifybackurl/manage_authorizedurls.html";
@@ -73,6 +86,7 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
 
     // Properties
     private static final String MESSAGE_CONFIRM_REMOVE_AUTHORIZEDURL = "verifybackurl.message.confirmRemoveAuthorizedUrl";
+    private static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "verifybackurl.listItems.itemsPerPage";
 
     // Validations
     private static final String VALIDATION_ATTRIBUTES_PREFIX = "verifybackurl.model.entity.authorizedurl.attribute.";
@@ -83,6 +97,7 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     private static final String VIEW_MODIFY_AUTHORIZEDURL = "modifyAuthorizedUrl";
 
     // Actions
+    private static final String ACTION_GET_AUTHORIZEDURL_ITEMS = "getAuthorizedUrlItems";
     private static final String ACTION_CREATE_AUTHORIZEDURL = "createAuthorizedUrl";
     private static final String ACTION_MODIFY_AUTHORIZEDURL = "modifyAuthorizedUrl";
     private static final String ACTION_REMOVE_AUTHORIZEDURL = "removeAuthorizedUrl";
@@ -93,8 +108,15 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     private static final String INFO_AUTHORIZEDURL_UPDATED = "verifybackurl.info.authorizedurl.updated";
     private static final String INFO_AUTHORIZEDURL_REMOVED = "verifybackurl.info.authorizedurl.removed";
     
-    // Session variable to store working values
-    private AuthorizedUrl _authorizedurl;
+    // Errors
+    private static final String ERROR_RESOURCE_NOT_FOUND = "Resource not found";
+    
+    @Inject
+    @Pager( listBookmark = MARK_AUTHORIZEDURL_LIST, defaultItemsPerPage = PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE )
+    private IPager<AuthorizedUrl, Void> pager;
+    
+    @Inject
+    private Models model;
     
     /**
      * Build the Manage View
@@ -104,13 +126,27 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     @View( value = VIEW_MANAGE_AUTHORIZEDURLS, defaultView = true )
     public String getManageAuthorizedUrls( HttpServletRequest request )
     {
-        _authorizedurl = null;
-        List<AuthorizedUrl> listAuthorizedUrls = AuthorizedUrlHome.getAuthorizedUrlsList(  );
-        Map<String, Object> model = getPaginatedListModel( request, MARK_AUTHORIZEDURL_LIST, listAuthorizedUrls, JSP_MANAGE_AUTHORIZEDURLS );
-
+        String strURL = AppPathService.getBaseUrl( request ) + JSP_MANAGE_AUTHORIZEDURLS;
+        pager.withBaseUrl( strURL )
+             .withListItem( AuthorizedUrlHome.getAuthorizedUrlsList( ) )
+             .populateModels( request, model, getLocale( ) );
+        
         return getPage( PROPERTY_PAGE_TITLE_MANAGE_AUTHORIZEDURLS, TEMPLATE_MANAGE_AUTHORIZEDURLS, model );
     }
 
+    /**
+     * Retrieves a paginated list of style items for the specified page number.
+     *
+     * @param numPage The page number to retrieve.
+     * @return A list of style items for the specified page.
+     */
+    @Action( value = ACTION_GET_AUTHORIZEDURL_ITEMS )
+	@ResponseBody
+    public List<AuthorizedUrl> getAuthorizedUrlItems( @RequestParam("page") int numPage )
+    {
+    	return pager.getPaginator( ).get( ).getPageItems( numPage );
+    }
+    
     /**
      * Returns the form to create a authorizedurl
      *
@@ -120,12 +156,7 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     @View( VIEW_CREATE_AUTHORIZEDURL )
     public String getCreateAuthorizedUrl( HttpServletRequest request )
     {
-        _authorizedurl = ( _authorizedurl != null ) ? _authorizedurl : new AuthorizedUrl(  );
-
-        Map<String, Object> model = getModel(  );
-        model.put( MARK_AUTHORIZEDURL, _authorizedurl );
-
-        return getPage( PROPERTY_PAGE_TITLE_CREATE_AUTHORIZEDURL, TEMPLATE_CREATE_AUTHORIZEDURL, model );
+        return getPage( PROPERTY_PAGE_TITLE_CREATE_AUTHORIZEDURL, TEMPLATE_CREATE_AUTHORIZEDURL, model ); 
     }
 
     /**
@@ -137,15 +168,16 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     @Action( ACTION_CREATE_AUTHORIZEDURL )
     public String doCreateAuthorizedUrl( HttpServletRequest request )
     {
-        populate( _authorizedurl, request );
+    	AuthorizedUrl authorizedUrl = new AuthorizedUrl( );
+    	populate( authorizedUrl, request, getLocale( ) );
 
         // Check constraints
-        if ( !validateBean( _authorizedurl, VALIDATION_ATTRIBUTES_PREFIX ) )
+        if ( !validateBean( authorizedUrl, VALIDATION_ATTRIBUTES_PREFIX ) )
         {
             return redirectView( request, VIEW_CREATE_AUTHORIZEDURL );
         }
 
-        AuthorizedUrlHome.create( _authorizedurl );
+        AuthorizedUrlHome.create( authorizedUrl );
         addInfo( INFO_AUTHORIZEDURL_CREATED, getLocale(  ) );
 
         return redirectView( request, VIEW_MANAGE_AUTHORIZEDURLS );
@@ -158,14 +190,14 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
      * @param request The Http request
      * @return the html code to confirm
      */
-    @Action( ACTION_CONFIRM_REMOVE_AUTHORIZEDURL )
+    @Action( value = ACTION_CONFIRM_REMOVE_AUTHORIZEDURL, securityTokenAction = ACTION_REMOVE_AUTHORIZEDURL )
     public String getConfirmRemoveAuthorizedUrl( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_AUTHORIZEDURL ) );
         UrlItem url = new UrlItem( getActionUrl( ACTION_REMOVE_AUTHORIZEDURL ) );
         url.addParameter( PARAMETER_ID_AUTHORIZEDURL, nId );
 
-        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_AUTHORIZEDURL, url.getUrl(  ), AdminMessage.TYPE_CONFIRMATION );
+        String strMessageUrl = AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_AUTHORIZEDURL, null, null, url.getUrl(  ), null, AdminMessage.TYPE_CONFIRMATION, null, JSP_MANAGE_AUTHORIZEDURLS );
 
         return redirect( request, strMessageUrl );
     }
@@ -197,13 +229,13 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_AUTHORIZEDURL ) );
 
-        if ( _authorizedurl == null || ( _authorizedurl.getId(  ) != nId ))
-        {
-            _authorizedurl = AuthorizedUrlHome.findByPrimaryKey( nId );
+        AuthorizedUrl authorizedurl = AuthorizedUrlHome.findByPrimaryKey( nId );
+        if ( authorizedurl == null )
+        {            
+            throw new AppException( ERROR_RESOURCE_NOT_FOUND );
         }
 
-        Map<String, Object> model = getModel(  );
-        model.put( MARK_AUTHORIZEDURL, _authorizedurl );
+        model.put( MARK_AUTHORIZEDURL, authorizedurl );
 
         return getPage( PROPERTY_PAGE_TITLE_MODIFY_AUTHORIZEDURL, TEMPLATE_MODIFY_AUTHORIZEDURL, model );
     }
@@ -217,15 +249,21 @@ public class AuthorizedUrlJspBean extends ManageVerifybackurlJspBean
     @Action( ACTION_MODIFY_AUTHORIZEDURL )
     public String doModifyAuthorizedUrl( HttpServletRequest request )
     {
-        populate( _authorizedurl, request );
+    	int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_AUTHORIZEDURL ) );
+    	AuthorizedUrl authorizedurl = AuthorizedUrlHome.findByPrimaryKey( nId );
+        if ( authorizedurl == null )
+        {            
+            throw new AppException( ERROR_RESOURCE_NOT_FOUND );
+        }
+    	populate( authorizedurl, request, getLocale( ) );
 
         // Check constraints
-        if ( !validateBean( _authorizedurl, VALIDATION_ATTRIBUTES_PREFIX ) )
+        if ( !validateBean( authorizedurl, VALIDATION_ATTRIBUTES_PREFIX ) )
         {
-            return redirect( request, VIEW_MODIFY_AUTHORIZEDURL, PARAMETER_ID_AUTHORIZEDURL, _authorizedurl.getId( ) );
+            return redirect( request, VIEW_MODIFY_AUTHORIZEDURL, PARAMETER_ID_AUTHORIZEDURL, authorizedurl.getId( ) );
         }
 
-        AuthorizedUrlHome.update( _authorizedurl );
+        AuthorizedUrlHome.update( authorizedurl );
         addInfo( INFO_AUTHORIZEDURL_UPDATED, getLocale(  ) );
 
         return redirectView( request, VIEW_MANAGE_AUTHORIZEDURLS );

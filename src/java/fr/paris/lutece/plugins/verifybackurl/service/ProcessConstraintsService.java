@@ -33,8 +33,9 @@
  */
 package fr.paris.lutece.plugins.verifybackurl.service;
 
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.List;
+
+import jakarta.enterprise.inject.spi.CDI;
 
 public class ProcessConstraintsService
 {
@@ -45,7 +46,7 @@ public class ProcessConstraintsService
      */
     public static boolean checkConstraints ( String url )
     {
-        List<IBackUrlConstraint> listBackUrlConstraints = SpringContextService.getBeansOfType( IBackUrlConstraint.class );
+        List<IBackUrlConstraint> listBackUrlConstraints = CDI.current( ).select( IBackUrlConstraint.class ).stream( ).toList( );
         
         for ( IBackUrlConstraint constraint : listBackUrlConstraints )
         {

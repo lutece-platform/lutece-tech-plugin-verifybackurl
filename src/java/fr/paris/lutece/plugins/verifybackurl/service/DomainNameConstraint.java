@@ -34,7 +34,9 @@
 package fr.paris.lutece.plugins.verifybackurl.service;
 
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class DomainNameConstraint implements IBackUrlConstraint
 {
     /**

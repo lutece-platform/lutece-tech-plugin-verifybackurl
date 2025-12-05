@@ -38,43 +38,49 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 /**
  * The Class AuthorizedUrlService.
  */
+@ApplicationScoped
 public class AuthorizedUrlService
-{
-    private static List<AuthorizedUrl> _listAuthorizedUrl;
-    
-    private static AuthorizedUrlService _instance;
+{    
+    private List<IAuthorizedUrlProvider> _authorizedUrlProviderList;
       /**
      * Get instance of AuthorizedUrlService
      * @return instance
+     * 
+     * @deprecated Use {@code @Inject} to obtain the {@link AuthorizedUrlService} 
+     * instance. This method will be removed in future versions.
      */
+    @Deprecated( since = "8.0", forRemoval = true )
     public static AuthorizedUrlService getInstance( )
     {
-        if ( _instance == null )
-        {
-            _instance = new AuthorizedUrlService( );
-                
-        }
-        return _instance;
+    	return CDI.current( ).select( AuthorizedUrlService.class ).get( );
     }
     
-    private AuthorizedUrlService( )
+    AuthorizedUrlService( )
     {
         
     };
+    
+    @PostConstruct
+    private void init( )
+    {
+    	_authorizedUrlProviderList = CDI.current( ).select( IAuthorizedUrlProvider.class ).stream( ).toList( );
+    }
     
     /**
      * Return the name of the urlAuthorized
@@ -83,15 +89,15 @@ public class AuthorizedUrlService
      */
     public String getName( String url )
     {
-        _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
+    	List<AuthorizedUrl> listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
             
-        for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
+        for ( IAuthorizedUrlProvider provider : _authorizedUrlProviderList )
         {
-            _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsList( ) );
+            listAuthorizedUrl.addAll( provider.getAuthorizedUrlsList( ) );
         }
-        if ( !_listAuthorizedUrl.isEmpty( ) )
+        if ( !listAuthorizedUrl.isEmpty( ) )
         {
-            for ( AuthorizedUrl strAuthUrl : _listAuthorizedUrl )
+            for ( AuthorizedUrl strAuthUrl : listAuthorizedUrl )
             {
                 if ( VerifiyBackUrlUtils.compareBaseUrl( strAuthUrl.getUrl( ), url ) )
                 {
@@ -110,15 +116,15 @@ public class AuthorizedUrlService
      */
     public String getNameByApplicationCode( String strApplicationCode,String url )
     {
-    	  _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
+    	 List<AuthorizedUrl> listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
           
-          for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
+          for ( IAuthorizedUrlProvider provider : _authorizedUrlProviderList )
           {
-              _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsByApplicationCode(strApplicationCode));
+              listAuthorizedUrl.addAll( provider.getAuthorizedUrlsByApplicationCode(strApplicationCode));
           }
-          if ( !_listAuthorizedUrl.isEmpty( ) )
+          if ( !listAuthorizedUrl.isEmpty( ) )
           {
-              for ( AuthorizedUrl strAuthUrl : _listAuthorizedUrl )
+              for ( AuthorizedUrl strAuthUrl : listAuthorizedUrl )
               {
                   if ( VerifiyBackUrlUtils.compareBaseUrl( strAuthUrl.getUrl( ), url ) )
                   {

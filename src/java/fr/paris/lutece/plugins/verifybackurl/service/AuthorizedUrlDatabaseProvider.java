@@ -37,7 +37,9 @@ import java.util.List;
 
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrlHome;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class AuthorizedUrlDatabaseProvider implements IAuthorizedUrlProvider
 {
     /**

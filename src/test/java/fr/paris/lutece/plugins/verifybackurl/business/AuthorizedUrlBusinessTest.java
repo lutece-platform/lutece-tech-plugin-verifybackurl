@@ -34,6 +34,8 @@
 
 package fr.paris.lutece.plugins.verifybackurl.business;
 
+import org.junit.jupiter.api.Test;
+
 import fr.paris.lutece.test.LuteceTestCase;
 
 
@@ -44,6 +46,7 @@ public class AuthorizedUrlBusinessTest extends LuteceTestCase
     private final static String NAME1 = "Name1";
     private final static String NAME2 = "Name2";
 
+    @Test
     public void testBusiness(  )
     {
         // Initialize an object
@@ -54,19 +57,22 @@ public class AuthorizedUrlBusinessTest extends LuteceTestCase
         // Create test
         AuthorizedUrlHome.create( authorizedUrl );
         AuthorizedUrl authorizedUrlStored = AuthorizedUrlHome.findByPrimaryKey( authorizedUrl.getId( ) );
-        assertEquals( authorizedUrlStored.getUrl() , authorizedUrl.getUrl( ) );
-        assertEquals( authorizedUrlStored.getName() , authorizedUrl.getName( ) );
+        
+        assertEquals( authorizedUrl.getUrl( ), authorizedUrlStored.getUrl( ) );
+        assertEquals( authorizedUrl.getName( ), authorizedUrlStored.getName( ) );
 
         // Update test
         authorizedUrl.setUrl( URL2 );
         authorizedUrl.setName( NAME2 );
         AuthorizedUrlHome.update( authorizedUrl );
         authorizedUrlStored = AuthorizedUrlHome.findByPrimaryKey( authorizedUrl.getId( ) );
-        assertEquals( authorizedUrlStored.getUrl() , authorizedUrl.getUrl( ) );
-        assertEquals( authorizedUrlStored.getName() , authorizedUrl.getName( ) );
+        
+        assertEquals( authorizedUrl.getUrl( ) , authorizedUrlStored.getUrl( ) );
+        assertEquals( authorizedUrl.getName( ), authorizedUrlStored.getName( ) );
 
         // List test
         AuthorizedUrlHome.getAuthorizedUrlsList();
+        assertEquals( 1, AuthorizedUrlHome.getAuthorizedUrlsList( ).size( ) );
 
         // Delete test
         AuthorizedUrlHome.remove( authorizedUrl.getId( ) );
