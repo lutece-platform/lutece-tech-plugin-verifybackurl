@@ -38,14 +38,14 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.verifybackurl.business.AuthorizedUrl;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifyBackUrlConstants;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
@@ -85,7 +85,7 @@ public class AuthorizedUrlService
     {
         _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
             
-        for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
+        for ( IAuthorizedUrlProvider provider : CDI.current( ).select( IAuthorizedUrlProvider.class ).stream( ).toList( ) )
         {
             _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsList( ) );
         }
@@ -112,7 +112,7 @@ public class AuthorizedUrlService
     {
     	  _listAuthorizedUrl = new ArrayList<AuthorizedUrl>();
           
-          for ( IAuthorizedUrlProvider provider : SpringContextService.getBeansOfType( IAuthorizedUrlProvider.class ) )
+          for ( IAuthorizedUrlProvider provider : CDI.current( ).select( IAuthorizedUrlProvider.class ).stream( ).toList( ) )
           {
               _listAuthorizedUrl.addAll( provider.getAuthorizedUrlsByApplicationCode(strApplicationCode));
           }

@@ -33,8 +33,9 @@
  */ 
 package fr.paris.lutece.plugins.verifybackurl.business;
 
-import org.hibernate.validator.constraints.*;
 import java.io.Serializable;
+
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * This is the business class for the object AuthorizedUrl

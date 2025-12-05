@@ -7,38 +7,43 @@
 				</@tform>
 			</@boxHeader>
 			<@boxBody>    
-				<@messages infos=infos />
-				<@paginationAdmin paginator=paginator combo=1 />
-					<@table>
-						<@tr>
-							<@input type='hidden' id='id' name='id' />
-							<@th>#i18n{verifybackurl.manage_authorizedurls.columnApplicationCode}</@th>
-							<@th>#i18n{verifybackurl.manage_authorizedurls.columnName}</@th>
-							<@th>#i18n{verifybackurl.manage_authorizedurls.columnUrl}</@th>
-							<@th>#i18n{portal.util.labelActions}</@th>
-						</@tr>
-						<@tableHeadBodySeparator />
-						<#list authorizedurl_list as authorizedurl >
-							<@tr>
-								<@input type='hidden' id='id' name='id' />
-								<@td>
-									${authorizedurl.applicationCode!''}
-								</@td>
-								
-								<@td>
-									${authorizedurl.name}
-								</@td>
-								<@td>
-									${authorizedurl.url}
-								</@td>
-								<@td>
-									<@aButton href='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?view=modifyAuthorizedUrl&id=${authorizedurl.id}' buttonIcon='edit' title='#i18n{portal.util.labelModify}' size='sm' hideTitle=['all'] />
-									<@aButton href='jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?action=confirmRemoveAuthorizedUrl&id=${authorizedurl.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' color='danger' size='sm' hideTitle=['all'] />
-								</@td>
-							</@tr>
-						</#list>
-					</@table>
-				<@paginationAdmin paginator=paginator />
+			<@messages infos=infos />
+			
+			<#assign authorizedurlColumns = [
+	          {"name": "#i18n{verifybackurl.manage_authorizedurls.columnApplicationCode}", "property": "applicationCode", "sortable": false},
+			  {"name": "#i18n{verifybackurl.manage_authorizedurls.columnName}", "property": "name", "sortable": false},
+			  {"name": "#i18n{verifybackurl.manage_authorizedurls.columnUrl}", "property": "url", "sortable": false}
+	        ]>
+			
+			<#-- Définition des actions -->
+	        <#assign authorizedurlActions = {
+	          "edit": {
+	          "url": "jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?view=modifyAuthorizedUrl&id={id}",
+	          "icon": "edit",
+	          "title": "#i18n{portal.util.labelModify}",
+	          "btnClass": "btn-primary btn-sm"
+	        },
+	          "delete": {
+	          "url": "jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?action=confirmRemoveAuthorizedUrl&id={id}",
+	          "icon": "trash",
+	          "title": "#i18n{portal.util.labelDelete}",
+	          "btnClass": "btn-danger btn-sm",
+	          "confirm": "false"
+	        }
+	        }>
+	        
+	        <#-- Page complète avec navigation -->
+            <#-- Table avec pagination AJAX -->
+            <@paginationAjax 
+                paginator=paginator 
+                columns=authorizedurlColumns
+                ajaxUrl="jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp?action=getAuthorizedUrlItems"
+                tableId="authorizedUrlsTable"
+                combo=1
+                showcount=0
+                actions=authorizedurlActions
+            />
+			
 			</@boxBody>
 		</@box>
 	</@columns>

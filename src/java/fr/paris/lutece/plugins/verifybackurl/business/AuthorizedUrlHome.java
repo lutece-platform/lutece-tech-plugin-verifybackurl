@@ -35,8 +35,8 @@
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ import java.util.List;
 public final class AuthorizedUrlHome
 {
     // Static variable pointed at the DAO instance
-    private static IAuthorizedUrlDAO _dao = SpringContextService.getBean( "verifybackurl.authorizedUrlDAO" );
+    private static IAuthorizedUrlDAO _dao = CDI.current( ).select( IAuthorizedUrlDAO.class ).get( );
     private static Plugin _plugin = PluginService.getPlugin( "verifybackurl" );
 
     /**

@@ -34,23 +34,22 @@
 package fr.paris.lutece.plugins.verifybackurl.utils;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.util.http.AntPathMatcher;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.PathMatcher;
 
 
 
 public class VerifiyBackUrlUtils
 {
     
-    public final static PathMatcher PATH_MATCHER = new AntPathMatcher( );
+    public final static AntPathMatcher PATH_MATCHER = new AntPathMatcher( );
     
     /**
      * Test if the BacUrl is a valid url

@@ -1,9 +1,8 @@
-<jsp:useBean id="manageverifybackurlAuthorizedUrl" scope="session" class="fr.paris.lutece.plugins.verifybackurl.web.AuthorizedUrlJspBean" />
-<% String strContent = manageverifybackurlAuthorizedUrl.processController ( request , response ); %>
+${ pageContext.setAttribute( 'strContent', authorizedUrlJspBean.processController ( pageContext.request , pageContext.response ) ) }
 
 <%@ page errorPage="../../ErrorPage.jsp" %>
 <jsp:include page="../../AdminHeader.jsp" />
 
-<%= strContent %>
+${ pageContext.getAttribute( 'strContent' ) }
 
 <%@ include file="../../AdminFooter.jsp" %>
