@@ -34,12 +34,14 @@
 package fr.paris.lutece.plugins.verifybackurl.service;
 
 import fr.paris.lutece.plugins.verifybackurl.utils.VerifiyBackUrlUtils;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * 
  * CharactersDomainConstraint
  *
  */
+@ApplicationScoped
 public class CharactersDomainConstraint implements IBackUrlConstraint
 {
     /**
