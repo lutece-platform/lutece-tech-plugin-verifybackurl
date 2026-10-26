@@ -42,15 +42,11 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
-import fr.paris.lutece.portal.util.mvc.commons.annotations.RequestParam;
-import fr.paris.lutece.portal.util.mvc.commons.annotations.ResponseBody;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.web.cdi.mvc.Models;
 import fr.paris.lutece.portal.web.util.IPager;
 import fr.paris.lutece.portal.web.util.Pager;
 import fr.paris.lutece.util.url.UrlItem;
-
-import java.util.List;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -79,14 +75,15 @@ public class AuthorizedUrlJspBean extends MVCAdminJspBean
     private static final String PROPERTY_PAGE_TITLE_CREATE_AUTHORIZEDURL = "verifybackurl.create_authorizedurl.pageTitle";
 
     // Markers
-    private static final String MARK_AUTHORIZEDURL_LIST = "authorizedurl_list";
+    static final String MARK_AUTHORIZEDURL_LIST = "authorizedurl_list";
     private static final String MARK_AUTHORIZEDURL = "authorizedurl";
 
-    private static final String JSP_MANAGE_AUTHORIZEDURLS = "jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp";
+    static final String JSP_MANAGE_AUTHORIZEDURLS = "jsp/admin/plugins/verifybackurl/ManageAuthorizedUrls.jsp";
 
     // Properties
     private static final String MESSAGE_CONFIRM_REMOVE_AUTHORIZEDURL = "verifybackurl.message.confirmRemoveAuthorizedUrl";
-    private static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "verifybackurl.listItems.itemsPerPage";
+    static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "verifybackurl.listItems.itemsPerPage";
+    static final String PAGER_NAME = "verifybackurl.authorizedUrls";
 
     // Validations
     private static final String VALIDATION_ATTRIBUTES_PREFIX = "verifybackurl.model.entity.authorizedurl.attribute.";
@@ -97,7 +94,6 @@ public class AuthorizedUrlJspBean extends MVCAdminJspBean
     private static final String VIEW_MODIFY_AUTHORIZEDURL = "modifyAuthorizedUrl";
 
     // Actions
-    private static final String ACTION_GET_AUTHORIZEDURL_ITEMS = "getAuthorizedUrlItems";
     private static final String ACTION_CREATE_AUTHORIZEDURL = "createAuthorizedUrl";
     private static final String ACTION_MODIFY_AUTHORIZEDURL = "modifyAuthorizedUrl";
     private static final String ACTION_REMOVE_AUTHORIZEDURL = "removeAuthorizedUrl";
@@ -112,7 +108,7 @@ public class AuthorizedUrlJspBean extends MVCAdminJspBean
     private static final String ERROR_RESOURCE_NOT_FOUND = "Resource not found";
     
     @Inject
-    @Pager( listBookmark = MARK_AUTHORIZEDURL_LIST, defaultItemsPerPage = PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE )
+    @Pager( name = PAGER_NAME, listBookmark = MARK_AUTHORIZEDURL_LIST, defaultItemsPerPage = PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE )
     private IPager<AuthorizedUrl, Void> pager;
     
     @Inject
@@ -134,19 +130,6 @@ public class AuthorizedUrlJspBean extends MVCAdminJspBean
         return getPage( PROPERTY_PAGE_TITLE_MANAGE_AUTHORIZEDURLS, TEMPLATE_MANAGE_AUTHORIZEDURLS, model );
     }
 
-    /**
-     * Retrieves a paginated list of style items for the specified page number.
-     *
-     * @param numPage The page number to retrieve.
-     * @return A list of style items for the specified page.
-     */
-    @Action( value = ACTION_GET_AUTHORIZEDURL_ITEMS )
-	@ResponseBody
-    public List<AuthorizedUrl> getAuthorizedUrlItems( @RequestParam("page") int numPage )
-    {
-    	return pager.getPaginator( ).get( ).getPageItems( numPage );
-    }
-    
     /**
      * Returns the form to create a authorizedurl
      *
@@ -190,7 +173,7 @@ public class AuthorizedUrlJspBean extends MVCAdminJspBean
      * @param request The Http request
      * @return the html code to confirm
      */
-    @Action( value = ACTION_CONFIRM_REMOVE_AUTHORIZEDURL, securityTokenAction = ACTION_REMOVE_AUTHORIZEDURL )
+    @Action( value = ACTION_CONFIRM_REMOVE_AUTHORIZEDURL, securityTokenAction = ACTION_REMOVE_AUTHORIZEDURL, securityTokenDisabled = true )
     public String getConfirmRemoveAuthorizedUrl( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_AUTHORIZEDURL ) );
